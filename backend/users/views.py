@@ -38,7 +38,7 @@ class CustomUserViewSet(UserViewSet):
             user.avatar = None
             user.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
     @action(
         detail=False,
         methods=['get'],
@@ -53,7 +53,7 @@ class CustomUserViewSet(UserViewSet):
             page, many=True, context={'request': request}
         )
         return self.get_paginated_response(serializer.data)
-    
+
     @action(
         detail=True,
         methods=['post', 'delete'],
@@ -87,4 +87,3 @@ class CustomUserViewSet(UserViewSet):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             user.subscriptions.remove(sub_user)
             return Response(status=status.HTTP_204_NO_CONTENT)
-

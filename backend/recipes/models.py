@@ -48,7 +48,7 @@ class Recipe(models.Model):
         ingredients = self.ingredients.all()
         for item in ingredients:
             item.delete()
-    
+
     def __str__(self):
         return self.name
 
@@ -69,6 +69,7 @@ class RecipeIngredient(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['recipe', 'ingredient'], name="unique_recipe_ingredient"
+                fields=['recipe', 'ingredient'],
+                name="unique_recipe_ingredient"
             )
         ]

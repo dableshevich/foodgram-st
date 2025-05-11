@@ -147,7 +147,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
 
-#REST Framework configuration
+# REST Framework configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
@@ -159,7 +159,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
-#Djoser
+# Djoser
 DJOSER = {
     'HIDE_USERS': False,
     'SERIALIZERS': {

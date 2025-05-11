@@ -49,7 +49,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == 'POST':
             if recipe_in_shopping_cart:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            
+
             user.shopping_cart.add(recipe)
             serializer = ShortRecipesSerializer(recipe)
             return Response(
@@ -81,9 +81,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     }
                 else:
                     data[ing_name]['amount'] += ingredient.amount
-        
+
         return self.create_pdf_file(data)
-    
+
     @action(
         detail=True,
         methods=['post', 'delete'],
@@ -100,7 +100,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == 'POST':
             if recipe_in_favorite:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            
+
             user.favorite_recipes.add(recipe)
             serializer = ShortRecipesSerializer(
                 recipe,
@@ -115,7 +115,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             user.favorite_recipes.remove(recipe)
             return Response(status=status.HTTP_204_NO_CONTENT)
-        
+
     @action(
         detail=True,
         methods=['get'],
@@ -130,7 +130,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'short-link': full_path
         }
         return Response(data)
-    
+
     def create_pdf_file(self, data):
         pdfmetrics.registerFont(TTFont('DejaVu', 'DejaVuSans.ttf'))
         buffer = BytesIO()
@@ -147,9 +147,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 f'- {key}: {value['amount']} '
                 f'{value['unit']}'
             )
-            
+
             pdf.drawString(110, y, line)
-        
+
         pdf.showPage()
         pdf.save()
 
@@ -163,7 +163,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 )
             }
         )
-    
+
     def redirect_to_recipe(self, s_id=None):
         return redirect(f'/recipes/{int(s_id, 16)}/')
-        
