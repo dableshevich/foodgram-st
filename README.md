@@ -1,10 +1,23 @@
-Находясь в папке infra, выполните команду docker-compose up. При выполнении этой команды контейнер frontend, описанный в docker-compose.yml, подготовит файлы, необходимые для работы фронтенд-приложения, а затем прекратит свою работу.
-
-По адресу http://localhost изучите фронтенд веб-приложения, а по адресу http://localhost/api/docs/ — спецификацию API.
-
+# Foodgram project
+Клонируйте репозиторий
+``` bash
+git clone https://github.com/dableshevich/foodgram-st.git
 ```
-sudo docker compose exec backend python3 manage.py migrate && \
-sudo docker compose exec backend python3 manage.py load_ingredients && \
-sudo docker compose exec backend python3 manage.py collectstatic && \
-sudo docker compose exec backend cp -r static/. /collected_static/static/
+
+Перейдите в директорию с инвраструктурой проекта
+``` bash
+cd /foodgram-st/infra/
+```
+
+Выполните сборку проекта с помощью docker-compose
+``` bash
+sudo docker compose up --build
+```
+
+Откройте в текущей директории ещё один терминал и выполните в нём следующие команды
+``` bash
+    sudo docker compose exec backend python3 manage.py migrate && \
+    sudo docker compose exec backend python3 manage.py loaddata collected_data.json && \                                                                 
+    sudo docker compose exec backend python3 manage.py collectstatic && \
+    sudo docker compose exec backend cp -r static/. /collected_static/static/
 ```
