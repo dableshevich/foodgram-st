@@ -26,11 +26,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'measurement_unit', 'amount')
     
     def validate(self, value):
-        try:
-            ingredient = Ingredient.objects.get(
-                pk=value['ingredient']['id']
-            )
-        except Ingredient.DoesNotExist:
+        if not Ingredient.objects.filter(pk=value['ingredient']['id']).exists():
             raise serializers.ValidationError(
                 f'Ingredient with {value['ingredient']['id']}'
                 ' not exists'

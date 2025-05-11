@@ -1,13 +1,13 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .serializers import IngredientSerializer, RecipeSerializer
 from .models import Ingredient, Recipe
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from .filters import IngredientFilter, RecipeFilter
-from .permissions import IsAuthorOrReadOnly
+from .permissions import IsAuthor
 from api.serializers import ShortRecipesSerializer
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -31,7 +31,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [IsAuthor, IsAuthenticatedOrReadOnly]
 
     @action(
         detail=True,

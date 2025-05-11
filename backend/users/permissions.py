@@ -6,6 +6,6 @@ class CurrentUserOrAdminOrReadOnly(permissions.BasePermission):
         user = request.user
         if request.method in permissions.SAFE_METHODS:
             return True
-        if type(obj) == type(user) and obj == user:
+        if obj == user:
             return True
         return user.is_staff
