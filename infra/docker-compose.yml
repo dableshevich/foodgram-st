@@ -1,17 +1,39 @@
 version: '3.3'
-services:
+volumes:
+  media:
+  static:
+  pg_data:
 
+services:
+  postgres:
+    image: postgres:14
+    env_file: ../.env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
   frontend:
     container_name: foodgram-front
     build: ../frontend
     volumes:
-      - ../frontend/:/app/result_build/
+      - static:/app/result_build/build/
+  backend:
+    build: ../backend
+    env_file: ../.env
+    depends_on:
+      - postgres
+    volumes:
+      - static:/collected_static/
+      - media:/app/media/
   nginx:
     container_name: foodgram-proxy
     image: nginx:1.25.4-alpine
     ports:
       - "80:80"
+    depends_on:
+      - backend
+      - frontend
+      - postgres
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
+      - static:/usr/share/nginx/html/
+      - media:/usr/share/nginx/html/media/
