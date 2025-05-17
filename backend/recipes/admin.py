@@ -18,6 +18,7 @@ class RecipeIngredientAdminInline(admin.TabularInline):
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'text', 'cooking_time',
                     'image', 'author')
+    search_fields = ('name',)
 
     fieldsets = (
         ('About recipe', {

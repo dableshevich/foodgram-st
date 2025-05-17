@@ -1,12 +1,25 @@
 from django.contrib import admin
-from .models import CustomUser
+from .models import CustomUser, FavoriteRecipes, ShoppingCart
+
+
+class FavoriteRecipesAdminInline(admin.TabularInline):
+    model = FavoriteRecipes
+    extra = 1
+    autocomplete_fields = ['recipe']
+    verbose_name_plural = 'Favorite Recipes'
+
+
+class ShoppingCartAdminInline(admin.TabularInline):
+    model = ShoppingCart
+    extra = 1
+    autocomplete_fields = ['recipe']
+    verbose_name_plural = 'Shopping Cart'
 
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email')
-    filter_horizontal = ('subscriptions', 'groups',
-                         'shopping_cart', 'favorite_recipes')
+    filter_horizontal = ('subscriptions', 'groups')
 
     fieldsets = (
         ('About User', {
@@ -16,12 +29,6 @@ class CustomUserAdmin(admin.ModelAdmin):
         ('Subscriprions', {
             'fields': ('subscriptions',)
         }),
-        ('Shopping cart', {
-            'fields': ('shopping_cart',)
-        }),
-        ('Favorite recipes', {
-            'fields': ('favorite_recipes',)
-        }),
         ('Permissions', {
             'fields': ('is_active', 'is_staff',
                        'is_superuser', 'groups')
@@ -30,3 +37,5 @@ class CustomUserAdmin(admin.ModelAdmin):
             'fields': ('date_joined',)
         })
     )
+
+    inlines = [FavoriteRecipesAdminInline, ShoppingCartAdminInline]

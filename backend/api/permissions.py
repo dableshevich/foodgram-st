@@ -9,3 +9,11 @@ class CurrentUserOrAdminOrReadOnly(permissions.BasePermission):
         if obj == user:
             return True
         return user.is_staff
+
+
+class IsAuthor(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return user == obj.author

@@ -1,5 +1,6 @@
-from .models import Ingredient, Recipe
 import django_filters
+
+from recipes.models import Ingredient, Recipe
 
 
 class IngredientFilter(django_filters.FilterSet):
@@ -20,26 +21,25 @@ class RecipeFilter(django_filters.FilterSet):
     is_in_shopping_cart = django_filters.NumberFilter(
         method='filter_is_in_shopping_cart'
     )
-    author = django_filters.NumberFilter(field_name='author__id')
 
     class Meta:
         model = Recipe
         fields = ['author']
-    
+
     def filter_is_favorited(self, queryset, name, value):
         user = self.request.user
         if not user.is_authenticated or value not in (1, 0):
             return queryset
         if value:
-            return queryset.filter(favorited_by=user)
+            return queryset.filter(favorited_by__user=user)
         else:
-            return queryset.exclude(favorited_by=user)
-    
+            return queryset.exclude(favorited_by__user=user)
+
     def filter_is_in_shopping_cart(self, queryset, name, value):
         user = self.request.user
         if not user.is_authenticated or value not in (1, 0):
             return queryset
         if value:
-            return queryset.filter(shopping_cart=user)
+            return queryset.filter(shopping_cart__user=user)
         else:
-            return queryset.exclude(shopping_cart=user)
+            return queryset.exclude(shopping_cart__user=user)
