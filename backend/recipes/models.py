@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.contrib.auth import get_user_model
+
 from . import constants
 
 
@@ -19,6 +20,12 @@ class Ingredient(models.Model):
     )
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'measurement_unit'],
+                name="unique_name_measurement_unit"
+            )
+        ]
         verbose_name = 'Ingredient'
         verbose_name_plural = 'Ingredients'
 
@@ -85,3 +92,55 @@ class RecipeIngredient(models.Model):
                 name="unique_recipe_ingredient"
             )
         ]
+
+
+class FavoriteRecipes(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='favorite_recipes'
+    )
+    recipe = models.ForeignKey(
+        'recipes.Recipe',
+        on_delete=models.CASCADE,
+        related_name='favorited_by'
+    )
+
+    class Meta:
+        verbose_name = 'Favorite Recipe'
+        verbose_name_plural = 'Favorite Recipes'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'recipe'],
+                name="unique_user_recipe_favorite_recipes"
+            )
+        ]
+
+    def __str__(self):
+        return self.user.name
+
+
+class ShoppingCart(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='shopping_cart'
+    )
+    recipe = models.ForeignKey(
+        'recipes.Recipe',
+        on_delete=models.CASCADE,
+        related_name='shopping_cart'
+    )
+
+    class Meta:
+        verbose_name = 'Shopping Cart'
+        verbose_name_plural = 'Shopping Carts'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'recipe'],
+                name="unique_user_recipe_shopping_cart"
+            )
+        ]
+
+    def __str__(self):
+        return self.user.name

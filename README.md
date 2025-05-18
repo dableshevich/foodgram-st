@@ -4,13 +4,7 @@
 Задание: Вам предстоит поработать с проектом «Фудграм» — сайтом, на котором пользователи будут публиковать свои рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. Зарегистрированным пользователям также будет доступен сервис «Список покупок». Он позволит создавать список продуктов, которые нужно купить для приготовления выбранных блюд.
 
 ## Стек технологий
-<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=ffffff"/>
-<img src="https://img.shields.io/badge/REACT-61DAFB?style=for-the-badge&logo=REACT&logoColor=000000"/>
-<img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=ffffff"/>
-<img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=PostgreSQL&logoColor=ffffff"/>
-<img src="https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=Nginx&logoColor=ffffff"/>
-<img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=ffffff"/>
-<img src="https://img.shields.io/badge/Git Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=ffffff"/>
+<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=ffffff"/> <img src="https://img.shields.io/badge/REACT-61DAFB?style=for-the-badge&logo=REACT&logoColor=000000"/> <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=ffffff"/> <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=PostgreSQL&logoColor=ffffff"/> <img src="https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=Nginx&logoColor=ffffff"/> <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=ffffff"/> <img src="https://img.shields.io/badge/Git Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=ffffff"/>
 
 ## Запуск проекта локально (только Backend)
 

@@ -15,8 +15,9 @@ from reportlab.lib.pagesizes import A4
 from io import BytesIO
 from django.db.models import Sum
 
-from recipes.models import Ingredient, Recipe, RecipeIngredient
-from users.models import ShoppingCart, FavoriteRecipes
+from recipes.models import (Ingredient, Recipe, RecipeIngredient,
+                            ShoppingCart, FavoriteRecipes)
+from users.models import Subscriptions
 from .serializers import (IngredientSerializer, RecipeWriteSerializer,
                           RecipeReadSerializer, ShortRecipesSerializer,
                           SubscriptionsUserSerializer)
@@ -63,7 +64,9 @@ class CustomUserViewSet(UserViewSet):
     )
     def subscriptions(self, request):
         user = request.user
-        queryset = user.subscriptions.all()
+        queryset = User.objects.filter(
+            subscriptions__user=user
+        )
 
         page = self.paginate_queryset(queryset)
         serializer = SubscriptionsUserSerializer(
@@ -80,18 +83,21 @@ class CustomUserViewSet(UserViewSet):
         user = request.user
         sub_user = self.get_object()
 
-        if user.id == id or user == sub_user:
+        if user == sub_user:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         user_in_subscriptions = user.subscriptions.filter(
-            id=sub_user.id
+            subscribe=sub_user
         ).exists()
 
         if request.method == 'POST':
             if user_in_subscriptions:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
-            user.subscriptions.add(sub_user)
+            Subscriptions.objects.create(
+                user=user,
+                subscribe=sub_user
+            )
             serializer = SubscriptionsUserSerializer(
                 sub_user, context={'request': request}
             )
@@ -102,7 +108,9 @@ class CustomUserViewSet(UserViewSet):
         else:
             if not user_in_subscriptions:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            user.subscriptions.remove(sub_user)
+            user.subscriptions.filter(
+                subscribe=sub_user
+            ).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
 

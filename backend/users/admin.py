@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import CustomUser, FavoriteRecipes, ShoppingCart
+
+from .models import CustomUser, Subscriptions
+from recipes.models import FavoriteRecipes, ShoppingCart
 
 
 class FavoriteRecipesAdminInline(admin.TabularInline):
@@ -16,18 +18,24 @@ class ShoppingCartAdminInline(admin.TabularInline):
     verbose_name_plural = 'Shopping Cart'
 
 
+class SubscriptionsAdminInline(admin.TabularInline):
+    model = Subscriptions
+    extra = 1
+    fk_name = 'user'
+    autocomplete_fields = ['subscribe']
+    verbose_name_plural = 'Subsciprions'
+
+
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email')
-    filter_horizontal = ('subscriptions', 'groups')
+    search_fields = ['username']
+    list_display = ['username', 'email']
+    filter_horizontal = ['groups']
 
     fieldsets = (
         ('About User', {
             'fields': ('username', 'email', 'first_name',
                        'last_name', 'password')
-        }),
-        ('Subscriprions', {
-            'fields': ('subscriptions',)
         }),
         ('Permissions', {
             'fields': ('is_active', 'is_staff',
@@ -38,4 +46,10 @@ class CustomUserAdmin(admin.ModelAdmin):
         })
     )
 
-    inlines = [FavoriteRecipesAdminInline, ShoppingCartAdminInline]
+    inlines = [FavoriteRecipesAdminInline, ShoppingCartAdminInline,
+               SubscriptionsAdminInline]
+
+
+@admin.register(Subscriptions)
+class SubscriptionsAdmin(admin.ModelAdmin):
+    pass

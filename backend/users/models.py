@@ -1,6 +1,8 @@
 from django.db import models
+from django.db.models import Q, F
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser, UserManager
+
 from . import constants
 
 
@@ -41,13 +43,6 @@ class CustomUser(AbstractUser):
         max_length=constants.FIRST_AND_LAST_NAMES_MAX_LENGTH,
         verbose_name='Last name'
     )
-    subscriptions = models.ManyToManyField(
-        'self',
-        symmetrical=False,
-        related_name='subscribers',
-        blank=True,
-        verbose_name='Subsribers'
-    )
     avatar = models.ImageField(
         upload_to='avatars/',
         blank=True,
@@ -66,45 +61,31 @@ class CustomUser(AbstractUser):
         return self.username
 
 
-class FavoriteRecipes(models.Model):
+class Subscriptions(models.Model):
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name='favorite_recipes'
+        related_name='subscriptions'
     )
-    recipe = models.ForeignKey(
-        'recipes.Recipe',
-        on_delete=models.CASCADE,
-        related_name='favorited_by'
-    )
-
-    class Meta:
-        verbose_name = 'Favorite Recipes'
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'recipe'],
-                name="unique_user_recipe_favorite_recipes"
-            )
-        ]
-
-
-class ShoppingCart(models.Model):
-    user = models.ForeignKey(
+    subscribe = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name='shopping_cart'
-    )
-    recipe = models.ForeignKey(
-        'recipes.Recipe',
-        on_delete=models.CASCADE,
-        related_name='shopping_cart'
+        related_name='subscribers'
     )
 
     class Meta:
-        verbose_name = 'Shopping Cart'
+        verbose_name = 'Subscription'
+        verbose_name_plural = 'Subscriptions'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'recipe'],
-                name="unique_user_recipe_shopping_cart"
+                fields=['user', 'subscribe'],
+                name="unique_user_subscribe"
+            ),
+            models.CheckConstraint(
+                check=~Q(user=F('subscribe')),
+                name='prevent_self_subscription'
             )
         ]
+
+    def __str__(self):
+        return self.user.name

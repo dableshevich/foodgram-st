@@ -93,20 +93,17 @@ class RecipeIngredientReadSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientWriteSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(source='ingredient.id')
+    id = serializers.PrimaryKeyRelatedField(
+        queryset=Ingredient.objects.all()
+    )
 
     class Meta:
         model = RecipeIngredient
         fields = ['id', 'amount']
 
-    def validate(self, value):
-        if not Ingredient.objects.filter(
-            pk=value['ingredient']['id']
-        ).exists():
-            raise serializers.ValidationError(
-                f'Ingredient with {value['ingredient']['id']}'
-                ' not exists'
-            )
+    def validate_amount(self, value):
+        if value <= 0:
+            raise serializers.ValidationError('Amount must be greater then 0.')
         return value
 
 
@@ -145,12 +142,11 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                   'cooking_time']
 
     def validate_ingredients(self, value):
-        ids = [item['ingredient']['id'] for item in value]
-        if len(ids) == 0:
-            raise serializers.ValidationError(
-                'Ingredients is empty.'
-            )
-        if len(ids) != len(set(ids)):
+        if not value:
+            raise serializers.ValidationError('Ingredients list cannot be empty.')
+
+        ingredients = [item['id'] for item in value]
+        if len(ingredients) != len(set(ingredients)):
             raise serializers.ValidationError(
                 'Ingredient is repeat.'
             )
@@ -158,13 +154,10 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         return value
 
     def add_recipe_ingredients(self, instance, ingredients):
-        ingredients_ids = [item['ingredient']['id'] for item in ingredients]
-        ingredients_queryset = Ingredient.objects.in_bulk(ingredients_ids)
-
         ingredients_links = [
             RecipeIngredient(
                 recipe=instance,
-                ingredient=ingredients_queryset[item['ingredient']['id']],
+                ingredient=item['id'],
                 amount=item['amount']
             ) for item in ingredients
         ]

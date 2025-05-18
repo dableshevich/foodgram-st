@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Recipe, RecipeIngredient, Ingredient
+
+from .models import (Recipe, RecipeIngredient, Ingredient,
+                     FavoriteRecipes, ShoppingCart)
 
 
 @admin.register(Ingredient)
@@ -27,3 +29,8 @@ class RecipeAdmin(admin.ModelAdmin):
         }),
     )
     inlines = [RecipeIngredientAdminInline]
+
+
+@admin.register(FavoriteRecipes, ShoppingCart)
+class FavoriteAndShoppingCartAdmin(admin.ModelAdmin):
+    pass
